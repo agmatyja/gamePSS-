@@ -2,41 +2,41 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
 /* REFERENCJE DO HTML-A */
 
-var paperBtn = document.getElementById('paperBtn');
-var rockBtn = document.getElementById('rockBtn');
-var scissorsBtn = document.getElementById('scissorsBtn');
-var newGameBtn = document.getElementById('newGame');
-var output = document.getElementById('output');
 
-var player;
-var computer;
-var round;
-var maxRound;
-/* NASŁUCHIWACZE */
-
-paperBtn.addEventListener("click", function() { playerMove('paper') })
-rockBtn.addEventListener("click", function() { playerMove('rock') })
-scissorsBtn.addEventListener("click", function() { playerMove('scissors') })
+var params;
 
 function reset() {
-  player = { score: 0, choice: '' };
-  computer = { score: 0, choice: '' };
-
-  round = 0;
-  maxRound = 10;// 
-  outputResult.innerHTML =  '';
-  outputScore.innerHTML =  '';
-  outputLastScore.innerHTML = '';
+	params = {
+		player: { score: 0, choice: '' },
+		computer: { score: 0, choice: '' },
+		round: 0,
+		maxRound: 10,
+		progress: []
+	};
+	outputResult.innerHTML =  '';
+	outputScore.innerHTML =  '';
+	outputLastScore.innerHTML = '';
 }
 reset();
 
 
-newGameBtn.addEventListener("click", function() {
+/* NASŁUCHIWACZE */
+var choice = document.querySelectorAll('.player-move');	
+for(var i = 0; i < choice.length; i++){
+	choice[i].addEventListener('click',function (event) {
+		var elem = event.target;
+		var atr = elem.getAttribute("data-move");
+		playerMove(atr);
+	});
+}
+
+
+document.getElementById('newGame').addEventListener("click", function() {
   // var wiPro = window.prompt('Do you want to play again?');
   var maxR = parseInt (window.prompt('How many won rounds finishes game?')); 
   if (!isNaN(maxR)) {
-  reset();
-  maxRound = maxR;
+	reset();
+	params.maxRound = maxR;
   }
 }); 
 
@@ -51,14 +51,15 @@ function randComputerMove () {
 /* ruch gracza */
  
 function playerMove (playerChoice) {
-  if (round >= maxRound) {
+  if (params.round >= params.maxRound) {
     window.alert("Game over, please press the new game button!");
     return;
   }
-  player.choice = playerChoice;
-  computer.choice = randComputerMove();
+  params.player.choice = playerChoice;
+  params.computer.choice = randComputerMove();
   checkRoundWinner();
   refreshScore();
+  
   return playerChoice;
   
 
@@ -66,38 +67,88 @@ function playerMove (playerChoice) {
 /* sprawdz kto wygrał rundę */
 
 function checkRoundWinner () {
-  if(player.choice === computer.choice) {
-    outputResult.innerHTML = 'Draw game: You played ' + player.choice + ' and computer played ' + computer.choice;
+  if(params.player.choice === params.computer.choice) {
+    outputResult.innerHTML = 'Draw game: You played ' + params.player.choice + ' and computer played ' + params.computer.choice;
+	return 'Draw game';
   }
-  else if((player.choice === 'rock' && computer.choice === 'scissors') ||
-          (player.choice === 'paper' && computer.choice === 'rock') ||
-          (player.choice === 'scissors' && computer.choice === 'paper')) {
-          player.score++;
-          outputResult.innerHTML =  'You won: You played ' + player.choice + ' and computer played ' + computer.choice;
+  else if((params.player.choice === 'rock' && params.computer.choice === 'scissors') ||
+          (params.player.choice === 'paper' && params.computer.choice === 'rock') ||
+          (params.player.choice === 'scissors' && params.computer.choice === 'paper')) {
+          params.player.score++;
+          outputResult.innerHTML =  'You won: You played ' + params.player.choice + ' and computer played ' + params.computer.choice;
+		  return 'You won';
   } 
   else {    
-    computer.score++;
-    outputResult.innerHTML = 'Computer won: You played ' + player.choice + ' and computer played ' + computer.choice;
+    params.computer.score++;
+    outputResult.innerHTML = 'Computer won: You played ' + params.player.choice + ' and computer played ' + params.computer.choice;
+	return 'Computer won';
   }
 }
 
 /* odświezą punkty w html-u */
 
 function refreshScore () {
-  round++;
-  outputScore.innerHTML = 'Player ' + player.score + ':' 
-    + computer.score + ' Computer, round ' + round + ' of ' 
-    + maxRound;
+  params.round++;
+  outputScore.innerHTML = 'Player ' + params.player.score + ':' 
+    + params.computer.score + ' Computer, round ' + params.round + ' of ' 
+    + params.maxRound;
   
 
-  if (round === maxRound) {
-    if (player.score !== computer.score) {
-     outputLastScore.innerHTML = (player.score > computer.score ? 'YOU' : 'COMPUTER') + ' WON THE ENTIRE GAME!!!';
+  if (params.round === params.maxRound) {
+    if (params.player.score !== params.computer.score) {
+     outputLastScore.innerHTML = (params.player.score > params.computer.score ? 'YOU' : 'COMPUTER') + ' WON THE ENTIRE GAME!!!';
+	
     }
     else {
       outputLastScore.innerHTML = 'NOBODY WON THE GAME!!!'
+	  
     }
-   
+   document.querySelector('#modal-overlay').classList.add('show');
+   document.querySelector('#modal-one').classList.add('show')
   } 
 }
+var showModal = function(event){
+		event.preventDefault();
+		var elem = event.target;
+		var hre = elem.getAttribute("href");
+		var eff = document.querySelector(hre);	
+		var modals = document.querySelectorAll('.modal');
+		for(var i = 0; i < modals.length; i++){
+			modals[i].classList.remove('show');	
+		}
+		eff.classList.add("show");
+		document.querySelector('#modal-overlay').classList.add('show');
+	};
+	
+	
+	var modalLinks = document.querySelectorAll('.show-modal');
+	
+	for(var i = 0; i < modalLinks.length; i++){
+		modalLinks[i].addEventListener('click',showModal);
+	}
+	
+	var hideModal = function(event){
+		event.preventDefault();
+		document.querySelector('#modal-overlay').classList.remove('show');
+	};
+	
+	var closeButtons = document.querySelectorAll('.modal .close');
+	
+	for(var i = 0; i < closeButtons.length; i++){
+		closeButtons[i].addEventListener('click', hideModal);
+	}
+	
+	 
+	
+	document.querySelector('#modal-overlay').addEventListener('click', hideModal);
+	
+	
+	
+	var modals = document.querySelectorAll('.modal');
+	
+	for(var i = 0; i < modals.length; i++){
+		modals[i].addEventListener('click', function(event){
+			event.stopPropagation();
+		});
+	}
 });

@@ -5,18 +5,46 @@
 		<script src="js/script.js"></script>
 		<link rel="stylesheet" type="text/css" href="css/style.css">
 		
-		<title>modals</title>
+		<title>paper-rock-scissors</title>
 	</head>
 	
 	<body>
-		<button id="paperBtn">Paper</button>
-		<button id="rockBtn">Rock</button>
-		<button id="scissorsBtn">Scissors</button>
+		<button id="paperBtn" data-move="paper" class="player-move">Paper</button>
+		<button id="rockBtn" data-move="rock" class="player-move">Rock</button>
+		<button id="scissorsBtn" data-move="scissors" class="player-move">Scissors</button>
 
 		<div id="outputResult"></div>
 
 		<div id="outputScore"></div>
-		<div id="outputLastScore"></div>
+		
 		<button id="newGame">New game</button>
+		
+		
+
+		<div class="overlay" id="modal-overlay">
+			<div class="modal" id="modal-one">
+				<a href="#" class="close">x</a>
+				<header>Game over!</header>
+				<div class="content">
+					<p><div id="outputLastScore"></div>tablica wyników</p>
+				</div>
+			</div>
+			
+			<div class="modal" id="modal-two">
+				<a href="#" class="close">x</a>
+				<header></header>
+				<div class="content">
+					<p></p>
+				</div>
+			</div>
+			
+			<div class="modal" id="modal-three">
+				<a href="#" class="close">x</a>
+				<header></header>
+				<div class="content">
+					<p></p>
+				</div>
+			</div>
+		</div>
 	</body>
 </html>
