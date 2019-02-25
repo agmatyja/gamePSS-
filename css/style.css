@@ -50,7 +50,7 @@ button:hover, button:active {
 .modal {
   display: none;
   background: #fff;
-  width: 200px;
+  width: 700px;
   position: absolute;
   top: 50%;
   left: 50%;
@@ -71,15 +71,26 @@ button:hover, button:active {
 }
 
 .modal header {
-  font-size: 20px;
-  line-height: 30px;
-  min-height: 30px;
+  font-size: 16px;
+  line-height: 20px;
+  min-height: 25px;
   font-weight: bold;
-  padding: 0 30px;
+  padding: 0 35px;
+  margin: 5px;
 }
 
 .modal .content {
-  min-height: 30px;
-  padding: 5px 30px;
+  min-height: 25px;
+  padding: 0 35px;
+  wrap: nowrap;
+  margin: 5px;
+}
+
+.modal table {
+  width: 100%;
+}
+
+.modal table tr:nth-child(even) {
+  background-color: #e2e2d2;
 }
 /*# sourceMappingURL=style.css.map */
